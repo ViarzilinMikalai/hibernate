@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
+    <data-source source="LOCAL" name="test@localhost" uuid="7a0d1f0e-b0cd-442b-82f0-352eb8fdf400">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://localhost:5433/test</jdbc-url>
+    </data-source>
+    <data-source source="LOCAL" name="hibernate-lessons@localhost" uuid="ff939dd5-eb76-4346-91ec-f48dfc20efff">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://localhost:5433/hibernate-lessons</jdbc-url>
+    </data-source>
+    <data-source source="LOCAL" name="test" uuid="95482c15-a2e1-469a-aab2-6e27c562d6d2">
+      <driver-ref>h2.unified</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.h2.Driver</jdbc-driver>
+      <jdbc-url>jdbc:h2:mem:test</jdbc-url>
+    </data-source>
+  </component>
+</project>

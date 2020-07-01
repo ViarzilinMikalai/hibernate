@@ -16,6 +16,7 @@ public class UserRun {
     User user1 = new User("Ivan", 25);
     User user2 = new User("Alex", 26);
     User user3 = new User("Vovan", 22);
+    Cars car1 = new Cars("red", user1);
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     /**
@@ -30,6 +31,7 @@ public class UserRun {
             try {
                 Configuration cfg = new Configuration();
                 cfg.addAnnotatedClass(User.class);
+                cfg.addAnnotatedClass(Cars.class);
                 serviceRegistry = new StandardServiceRegistryBuilder().
                         applySettings(cfg.getProperties()).build();
                 sessionFactory = cfg.buildSessionFactory(serviceRegistry);
@@ -57,6 +59,7 @@ public class UserRun {
             session.save(user1);
             session.save(user2);
             session.save(user3);
+            session.save(car1);
             tx.commit();
 //            session.flush();
             System.out.println("\tЗаписи добавлены");
@@ -73,17 +76,23 @@ public class UserRun {
      */
     private void recordsRead() {
         System.out.println("\nЧтение записей таблицы");
-        String query = "select u from " + User.class.getSimpleName() + " u  ORDER BY 'id' DESC ";
+        String query = "select u from " + User.class.getSimpleName() + " u ";
+        String queryCars = "select c from " + Cars.class.getSimpleName() + " c ";
 
         @SuppressWarnings("unchecked")
         List<User> list = session.getSession().createQuery(query).list();
+        List<Cars> carslist = session.getSession().createQuery(queryCars).list();
         list
                 .stream()
-                .filter(o -> o.getAge() > 25)
-//                .sorted((o1, o2) -> o2.getId().compareTo(o1.getId()))
-                .sorted(Comparator.comparingLong(User::getAge).reversed())
+//                .filter(o -> o.getAge() > 25)
+//                .sorted((o1, o2) -> o1.getId().compareTo(o2.getId()))
+                .sorted(Comparator.comparingLong(User::getId))
                 .forEach(s -> System.out.println(s.getId() + " " + s.getName() + " " + s.getAge()))
         ;
+
+        carslist
+                .stream()
+                .forEach(s -> System.out.println(s.getId() + " " + s.getColor() + " " + s.getUser().toString()));
     }
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -93,7 +102,9 @@ public class UserRun {
     private void recordFind(final Long id) {
         System.out.println("\nЧтение записи таблицы по ID");
         User user = session.getSession().load(User.class, id);
+        Cars car = session.getSession().load(Cars.class, id);
         System.out.println(user.getId() + " " + user.getName() + " " + user.getAge());
+        System.out.println(car.getId() + " " + car.getColor() + " " + car.getUser().toString());
     }
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -135,24 +146,35 @@ public class UserRun {
     /**
      * Конструктор класса
      */
-//    public UserRun() {
-//        // Создание сессии
-//        session = createHibernateSession();
-//        if (session != null) {
-//            // Добавление записей в таблицу
-//            recordsAdd();
-//            // Чтение записей таблицы
-//            recordsRead();
-//            // Поиск запис+и по идентификатору
+    public UserRun() {
+        // Создание сессии
+        session = createHibernateSession();
+        if (session != null) {
+            // Добавление записей в таблицу
+            recordsAdd();
+            // Чтение записей таблицы
+            recordsRead();
+            // Поиск запис+и по идентификатору
 //            updateUser();
+            session.close();
+            session = createHibernateSession();
+
+
+            System.out.println("\nЧтение записи таблицы по ID");
+            Cars car = session.getSession().load(Cars.class, 1L);
+            session.close();
+//            System.out.println(user.getId() + " " + user.getName() + " " + user.getAge());
+            System.out.println(car.getId() + " " + car.getColor() + " " + car.getUser().toString());
+
+
 //            recordFind(1L);
-////            removeUser();
+//            removeUser();
 //            recordsRead();
-//            // Закрытие сессии
-//            if (session.isOpen())
-//                session.close();
-//        }
-//    }
+            // Закрытие сессии
+            if (session.isOpen())
+                session.close();
+        }
+    }
 
 
     void closeSession(){
@@ -163,16 +185,16 @@ public class UserRun {
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     public static void main(String[] args) {
-        UserRun userRun = new UserRun();
-        userRun.createHibernateSession();
-        userRun.recordsAdd();
-        userRun.closeSession();
-
-
-        userRun.createHibernateSession();
-        userRun.recordsRead();
-        userRun.closeSession();
-
+//        UserRun userRun = new UserRun();
+//        userRun.createHibernateSession();
+//        userRun.recordsAdd();
+//        userRun.closeSession();
+//
+//
+//        userRun.createHibernateSession();
+//        userRun.recordsRead();
+//        userRun.closeSession();
+        new UserRun();
         System.exit(0);
     }
 }
