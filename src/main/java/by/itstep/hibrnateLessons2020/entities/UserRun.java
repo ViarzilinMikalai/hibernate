@@ -17,6 +17,7 @@ public class UserRun {
     User user2 = new User("Alex", 26);
     User user3 = new User("Vovan", 22);
     Cars car1 = new Cars("red", user1);
+    Cars car2 = new Cars("green", user1);
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     /**
@@ -60,6 +61,7 @@ public class UserRun {
             session.save(user2);
             session.save(user3);
             session.save(car1);
+            session.save(car2);
             tx.commit();
 //            session.flush();
             System.out.println("\tЗаписи добавлены");
@@ -91,6 +93,19 @@ public class UserRun {
         ;
 
         carslist
+                .stream()
+                .forEach(s -> System.out.println(s.getId() + " " + s.getColor()));
+    }
+
+
+    private void recordsReadSql() {
+        System.out.println("\nЧтение записей таблицы SQL");
+
+        String queryCars = "from Cars where user.name = 'Alex'";
+
+        @SuppressWarnings("unchecked")
+        List<Cars> list = session.getSession().createQuery(queryCars).list();
+        list
                 .stream()
                 .forEach(s -> System.out.println(s.getId() + " " + s.getColor() + " " + s.getUser().toString()));
     }
@@ -153,23 +168,11 @@ public class UserRun {
             // Добавление записей в таблицу
             recordsAdd();
             // Чтение записей таблицы
-            recordsRead();
-            // Поиск запис+и по идентификатору
-//            updateUser();
-            session.close();
-            session = createHibernateSession();
+            recordsReadSql();
 
-
-            System.out.println("\nЧтение записи таблицы по ID");
-            Cars car = session.getSession().load(Cars.class, 1L);
-            session.close();
-//            System.out.println(user.getId() + " " + user.getName() + " " + user.getAge());
-            System.out.println(car.getId() + " " + car.getColor() + " " + car.getUser().toString());
-
-
-//            recordFind(1L);
+            recordFind(1L);
 //            removeUser();
-//            recordsRead();
+            recordsRead();
             // Закрытие сессии
             if (session.isOpen())
                 session.close();

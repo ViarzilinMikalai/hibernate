@@ -8,6 +8,7 @@ import java.util.Objects;
 @Table(name="users")
 public class User {
 
+    @SuppressWarnings("JpaDataSourceORMInspection")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(unique = true, name = "identifer")
